@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard — Trafic aérien</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="brand">
+            <span class="brand-icon">✈</span>
+
+            <div>
+                <h1>ADP Dashboard</h1>
+                <p>Reporting du trafic aérien</p>
+            </div>
+        </div>
+
+        <nav>
+            <a href="/">Accueil</a>
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/api/health">API</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+
+        <section class="dashboard-header">
+            <div>
+                <span class="badge">Vue d’ensemble</span>
+                <h2>Tableau de bord du trafic aérien</h2>
+                <p>
+                    Analyse des vols au départ des aéroports de New York.
+                </p>
+            </div>
+
+            <button id="refresh-button" class="secondary-button">
+                Actualiser les données
+            </button>
+        </section>
+
+        <section class="filters">
+            <div class="filter-group">
+                <label for="origin-filter">Aéroport d’origine</label>
+
+                <select id="origin-filter">
+                    <option value="">Tous les aéroports</option>
+                    <option value="JFK">JFK</option>
+                    <option value="LGA">LGA</option>
+                    <option value="EWR">EWR</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="carrier-filter">Compagnie</label>
+
+                <select id="carrier-filter">
+                    <option value="">Toutes les compagnies</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="month-filter">Mois</label>
+
+                <select id="month-filter">
+                    <option value="">Tous les mois</option>
+                    <option value="1">Janvier</option>
+                    <option value="2">Février</option>
+                    <option value="3">Mars</option>
+                    <option value="4">Avril</option>
+                    <option value="5">Mai</option>
+                    <option value="6">Juin</option>
+                    <option value="7">Juillet</option>
+                    <option value="8">Août</option>
+                    <option value="9">Septembre</option>
+                    <option value="10">Octobre</option>
+                    <option value="11">Novembre</option>
+                    <option value="12">Décembre</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="kpi-grid">
+
+            <article class="kpi-card">
+                <div class="kpi-icon">✈</div>
+
+                <div>
+                    <p>Nombre total de vols</p>
+                    <h3 id="total-flights">252 704</h3>
+                    <span>Données chargées</span>
+                </div>
+            </article>
+
+            <article class="kpi-card">
+                <div class="kpi-icon">🏢</div>
+
+                <div>
+                    <p>Compagnies aériennes</p>
+                    <h3 id="total-airlines">--</h3>
+                    <span>Compagnies actives</span>
+                </div>
+            </article>
+
+            <article class="kpi-card">
+                <div class="kpi-icon">🌍</div>
+
+                <div>
+                    <p>Destinations</p>
+                    <h3 id="total-destinations">--</h3>
+                    <span>Destinations uniques</span>
+                </div>
+            </article>
+
+            <article class="kpi-card warning">
+                <div class="kpi-icon">⚠</div>
+
+                <div>
+                    <p>Vols annulés</p>
+                    <h3 id="cancelled-flights">--</h3>
+                    <span>Vols non effectués</span>
+                </div>
+            </article>
+
+        </section>
+
+        <section class="charts-grid">
+
+            <article class="chart-card large">
+                <div class="card-header">
+                    <div>
+                        <h3>Top 10 des destinations</h3>
+                        <p>Destinations les plus fréquentées</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="destinations-chart"></canvas>
+                </div>
+            </article>
+
+            <article class="chart-card">
+                <div class="card-header">
+                    <div>
+                        <h3>Répartition par origine</h3>
+                        <p>JFK, LGA et EWR</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="origins-chart"></canvas>
+                </div>
+            </article>
+
+            <article class="chart-card">
+                <div class="card-header">
+                    <div>
+                        <h3>Retards moyens</h3>
+                        <p>Départ et arrivée</p>
+                    </div>
+                </div>
+
+                <div class="chart-wrapper">
+                    <canvas id="delays-chart"></canvas>
+                </div>
+            </article>
+
+        </section>
+
+        <section class="table-card">
+
+            <div class="card-header">
+                <div>
+                    <h3>Principales compagnies</h3>
+                    <p>Classement selon le nombre de vols réalisés</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Code</th>
+                            <th>Compagnie</th>
+                            <th>Nombre de vols</th>
+                            <th>Part du trafic</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="airlines-table-body">
+                        <tr>
+                            <td>1</td>
+                            <td>UA</td>
+                            <td>United Air Lines</td>
+                            <td>En attente API</td>
+                            <td>--</td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>DL</td>
+                            <td>Delta Air Lines</td>
+                            <td>En attente API</td>
+                            <td>--</td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td>AA</td>
+                            <td>American Airlines</td>
+                            <td>En attente API</td>
+                            <td>--</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        Dashboard Trafic aérien — Rust, Axum et MySQL
+    </footer>
+
+    <script src="/static/js/dashboard.js"></script>
+
+</body>
+</html>

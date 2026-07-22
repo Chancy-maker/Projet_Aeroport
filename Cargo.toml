@@ -1,0 +1,27 @@
+[package]
+name = "adp_trafic_aerien"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+mysql = { version = "24", default-features = false }
+csv = "1.3"
+serde = { version = "1", features = ["derive"] }
+dotenvy = "0.15"
+anyhow = "1"
+url = "=2.4.1"
+idna = "=0.4.0"
+subprocess = "=0.2.9"
+rustc-hash = "=1.1.0"
+regex = "=1.10.6"
+regex-automata = "=0.4.7"
+uuid = "=1.10.0"
+hashbrown = "=0.14.5"
+home = "=0.5.9"
+flate2 = "=1.0.30"
+
+[build-dependencies]
+bindgen = "=0.69.4"
+
+[patch.crates-io]
+bindgen = { git = "https://github.com/rust-lang/rust-bindgen", tag = "v0.69.4" }
